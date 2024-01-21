@@ -12,10 +12,6 @@
 
   "waitFor": "postCreateCommand",
 
-  "postAttachCommand": {
-    "netlify dev": "netlify dev"
-  },
-
   "customizations": {
     "codespaces": {
       "openFiles": ["README.md"]

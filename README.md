@@ -23,3 +23,5 @@ Each of these endpoints require the header `X-API-Key` to be set to an API key w
 ## Development
 
 To run the project, it is recommended to use the existing [devcontainer](https://containers.dev/). This can be done through VSCode, GitHub, etc. - choose an option that works for you.
+
+The site is currently set up to run on Netlify, with Netlify Functions as the serverless functions provider. This is used to handle env variables (for social login secrets like `GITHUB_CLIENT_ID`, etc.)

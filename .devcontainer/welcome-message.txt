@@ -1,4 +1,2 @@
 👋 Hi! Thanks for trying out Calendari.
-
-🛠️ This environment is fully setup with all required software installed.
-   The application should start shortly in a different tab.
+  You most likely want to run `netlify link` followed by `netlify dev` to get started.
