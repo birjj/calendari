@@ -1,2 +1,6 @@
-👋 Hi! Thanks for trying out Calendari.
-  You most likely want to run `netlify link` followed by `netlify dev` to get started.
+👋 Hi! Thanks for trying out [38;5;196mCalendari[0m!
+   If this is your first time setting up, follow our getting started guide: [34mhttps://github.com/birjj/calendari/getting-started.md[0m
+   If you already have a configured Netlify project, you can get started by running:
+   [0;2m$ [0;1mnetlify link  [0;2;32m# links the repository to the Netlify project
+   [0;2m$ [0;1mnetlify dev   [0;2;32m# runs the project in development mode
+
