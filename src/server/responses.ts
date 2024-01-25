@@ -17,16 +17,24 @@ export const NotFound = (message: string, config: ResponseInit = {}) => {
 };
 
 /** Redirects using HTML rather than an HTTP response code, to e.g. support setting cookies */
-export const HTMLRedirect = (url: string, config: ResponseInit = {}) => {
+export const HTMLRedirect = (
+  url: string,
+  config: ResponseInit & { redirectText?: string } = {}
+) => {
+  const { redirectText = "Please wait.", ...restConfig } = config;
   return new Response(
     `<html lang="en">
         <head>
           <meta charset="utf-8">
         </head>
-        <body>
+        <body style="background:#13151a;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;color:white;font-size:24px">
           <noscript>
             <meta http-equiv="refresh" content="0; url=${url}" />
           </noscript>
+          <p style="text-align:center"><a href=${JSON.stringify(
+            url
+          )} style="background-image:linear-gradient(20deg, oklch(72% 0.25 3) 0%, oklch(92% 0.17 98) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:300%;background-position:0%;text-decoration:none">
+            Redirecting you.</a> ${redirectText}</p>
         </body>
         <script>
           setTimeout(function() {
@@ -40,7 +48,7 @@ export const HTMLRedirect = (url: string, config: ResponseInit = {}) => {
       </html>
       `,
     {
-      ...config,
+      ...restConfig,
       status: 200,
       statusText: "OK",
       headers: {
