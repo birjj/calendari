@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from "jose";
+import { jwtVerify } from "jose";
 import type { Provider } from "./auth.d.ts";
 import { getProviderUrls } from "./index.ts";
 import randomString from "@utils/random-string.ts";
