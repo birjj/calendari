@@ -1,8 +1,9 @@
 ---
-import GitHubProvider from "../../functions/auth/github";
+import { getProviderUrls, AUTH_PROVIDERS as providers } from "@server/auth";
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
-const providers = [GitHubProvider];
+
+export const prerender = true;
 ---
 
 <Layout title="Log in to Calendari.">
@@ -20,9 +21,9 @@ const providers = [GitHubProvider];
       {
         providers.map((provider) => (
           <li class="provider">
-            <a href={provider.uri}>
-              <Icon name={provider.icon} size={32} /> Log in using{" "}
-              {provider.name}
+            <a href={getProviderUrls(provider.name).begin}>
+              <Icon name={provider.icon} size={32} />
+              Log in using {provider.name}
             </a>
           </li>
         ))
