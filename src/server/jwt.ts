@@ -4,7 +4,7 @@ const JWT_SIGNING_KEY = import.meta.env["JWT_SIGNING_KEY"]
   ? new TextEncoder().encode(import.meta.env["JWT_SIGNING_KEY"])
   : null;
 if (!JWT_SIGNING_KEY) {
-  console.warn(
+  throw new Error(
     "The JWT_SIGNING_KEY env variable isn't set. JWT will not work as intended."
   );
 }

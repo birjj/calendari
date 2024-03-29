@@ -3,7 +3,8 @@ import type { Provider } from "./auth.d.ts";
 import { getProviderUrls } from "./index.ts";
 import randomString from "@utils/random-string.ts";
 import { getSignedJWT } from "@server/jwt.ts";
-import { Forbidden, HTMLRedirect } from "@server/responses.ts";
+import { BadRequest, Forbidden, HTMLRedirect } from "@server/responses.ts";
+import type { APIContext } from "astro";
 
 const CLIENT_ID = process.env["GITHUB_CLIENT_ID"];
 const CLIENT_SECRET = process.env["GITHUB_CLIENT_SECRET"];
@@ -21,91 +22,133 @@ if (!JWT_SIGNING_KEY) {
   );
 }
 
+const STATE_COOKIE_NAME = "calendari:github:state";
+
+/** Gets the URI we want to redirect users to, to start the OAuth process */
+const getGitHubOauthUri = () => {
+  const initiateUri = new URL("https://github.com/login/oauth/authorize");
+  initiateUri.searchParams.set("client_id", CLIENT_ID!);
+  initiateUri.searchParams.set(
+    "redirect_uri",
+    getProviderUrls("GitHub").return
+  );
+  initiateUri.searchParams.set("scope", "user:email");
+  return initiateUri;
+}
+
+/** Verifies that the state matches when the user returns from the OAuth process */
+const verifyGitHubOauthState = async (context: APIContext) => {
+  let state = "";
+  const jwt = context.cookies.get(STATE_COOKIE_NAME)?.value;
+  if (!jwt) {
+    console.warn("No state cookie present");
+    throw new Error("No state cookie present");
+  }
+  try {
+    const { payload } = await jwtVerify(jwt, JWT_SIGNING_KEY!);
+    state = `${payload["state"]}`;
+  } catch (e) {
+    console.warn("State cookie failed to verify", e);
+    throw new Error("State cookie failed to verify");
+  }
+  if (!state || state !== context.url.searchParams.get("state")) {
+    console.warn(
+      `State failed to match (${state} !== ${context.url.searchParams.get(
+        "state"
+      )})`
+    );
+    throw new Error("State failed to match");
+  }
+  return [true, ''];
+}
+
+/** Completes the process after the user returns from the OAuth process, by exchanging the code for a token, and then using that token to get user information */
+const getEmailsFromGitHub = async (context: APIContext) => {
+  if (context.url.searchParams.get("error")) {
+    console.warn("An error occurred when returning from GitHub:", {
+      error: context.url.searchParams.get("error"),
+      description: context.url.searchParams.get("error_description"),
+      uri: context.url.searchParams.get("error_uri"),
+    });
+    throw new Error(`The response from GitHub indicates that an error occurred ("${context.url.searchParams.get("error")}"). Please try again.`);
+  }
+  const code = context.url.searchParams.get("code");
+  if (!code) {
+    console.warn("No code in search params");
+    throw new Error("The response from GitHub doesn't contain a code. Something went wrong in the authentication flow. Please try again.");
+  }
+  const ghResponse = await (
+    await fetch(`https://github.com/login/oauth/access_token`, {
+      method: "POST",
+      body: JSON.stringify({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        code,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+  const ghAccessToken = ghResponse?.access_token;
+  if (!ghAccessToken) {
+    console.warn("Invalid response from GitHub:", ghResponse);
+    throw new Error(
+      "Couldn't authenticate the given code with GitHub. Please try again."
+    );
+  }
+  console.log("Fetching emails with code", ghAccessToken);
+  const emails = (await (
+    await fetch("https://api.github.com/user/emails", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${ghAccessToken}`,
+        Accept: "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    })
+  ).json()) as { email: string; primary: boolean }[] | undefined | null;
+  return emails;
+}
+
+/** The Provider exposes a uniform interface for authentication to happen through */
 const GitHubProvider: Provider = {
   enabled: Boolean(CLIENT_ID && CLIENT_SECRET && JWT_SIGNING_KEY),
   name: "GitHub",
   icon: "mdi:github",
+  /** Handles the login request, by redirecting the user to GitHub OAuth2 login */
   async handle(context) {
     // generate the URI we'll redirect our users to for OAuth2 login
-    const initiateUri = new URL("https://github.com/login/oauth/authorize");
-    initiateUri.searchParams.set("client_id", CLIENT_ID!);
-    initiateUri.searchParams.set(
-      "redirect_uri",
-      getProviderUrls("GitHub").return
-    );
-    initiateUri.searchParams.set("scope", "user:email");
+    const initiateUri = getGitHubOauthUri();
     // generate a state so we can be (more) sure the token was issued to us
     const state = randomString(8);
     initiateUri.searchParams.set("state", state);
     const jwt = await getSignedJWT({ state }, "1h");
-    // finally respond with the JWT in a cookie and an in-HTML redirect (because not all browsers support cookies on redirects)
-    context.cookies.set("calendari:github", jwt, {
+    // finally respond with the JWT in a cookie and redirect the user
+    context.cookies.set(STATE_COOKIE_NAME, jwt, {
       secure: true,
       httpOnly: true,
       maxAge: 3600000, // 1h
       sameSite: "none",
     });
-    return HTMLRedirect(initiateUri.toString());
+    return context.redirect(initiateUri.toString());
   },
   async handleReturn(context) {
     // verify that our state is as we expect, and no CSRF fuckery is going on
-    let state = "";
-    const jwt = context.cookies.get("calendari:github")?.value;
-    if (!jwt) {
-      console.log("No state cookie present");
-      return Forbidden(`No state cookie present`);
-    }
     try {
-      const { payload } = await jwtVerify(jwt, JWT_SIGNING_KEY!);
-      state = `${payload["state"]}`;
+      await verifyGitHubOauthState(context);
     } catch (e) {
-      console.warn("State cookie failed to verify", e);
-      return Forbidden(`State cookie failed to verify: ${e}`);
-    }
-    if (!state || state !== context.url.searchParams.get("state")) {
-      console.warn(
-        `State failed to match (${state} !== ${context.url.searchParams.get(
-          "state"
-        )})`
-      );
-      return Forbidden(`State failed to match`);
+      return BadRequest(e instanceof Error ? e.message : `${e}`);
     }
 
     // then exchange the token for a valid one from GitHub
-    const code = context.url.searchParams.get("code");
-    const ghResponse = await (
-      await fetch(`https://github.com/login/oauth/access_token`, {
-        method: "POST",
-        body: JSON.stringify({
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          code,
-        }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-    ).json();
-    const ghAccessToken = ghResponse?.access_token;
-    if (!ghAccessToken) {
-      console.warn("Invalid response from GitHub:", ghResponse);
-      return Forbidden(
-        "Something went wrong while verifying login. Please try again"
-      );
+    let emails: Awaited<ReturnType<typeof getEmailsFromGitHub>> = [];
+    try {
+      emails = await getEmailsFromGitHub(context);
+    } catch (e) {
+      return BadRequest(e instanceof Error ? e.message : `${e}`);
     }
-    console.log("Fetching emails with code", ghAccessToken);
-    const emails = (await (
-      await fetch("https://api.github.com/user/emails", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${ghAccessToken}`,
-          Accept: "application/json",
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      })
-    ).json()) as { email: string; primary: boolean }[] | undefined | null;
-    console.log("Got emails", emails);
     const email = emails?.find((e) => e.primary)?.email;
     return new Response(`Using email ${JSON.stringify(email)}`, {
       status: 200,

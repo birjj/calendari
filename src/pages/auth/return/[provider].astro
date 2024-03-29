@@ -1,0 +1,31 @@
+---
+import ErrorLayout from "@layouts/ErrorLayout.astro";
+import { AUTH_PROVIDERS as providers } from "@server/auth";
+import { NotFound } from "@server/responses";
+
+const providerName = Astro.params.provider;
+console.log("Got auth return", providerName);
+const provider = providers.find(
+  (p) => p.enabled && p.name.toLowerCase() === `${providerName}`.toLowerCase()
+);
+if (!provider) {
+  console.log("No provider found");
+  return NotFound(`No provider '${providerName}' found.`);
+}
+const resp = provider
+  ? await provider.handleReturn(Astro)
+  : NotFound(`No provider '${providerName}' found.`);
+
+if (resp.status < 400) {
+  // any non-errors from the auth provider are just returned directly
+  return resp;
+}
+
+// if the below Astro renders, an error has occurred
+---
+
+<ErrorLayout
+  response={resp}
+  returnText="Return to login page"
+  returnUrl="/login"
+/>

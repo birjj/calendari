@@ -1,0 +1,23 @@
+---
+import ErrorLayout from "@layouts/ErrorLayout.astro";
+import { AUTH_PROVIDERS as providers } from "@server/auth";
+import { NotFound } from "@server/responses";
+
+const providerName = Astro.params.provider;
+const provider = providers.find(
+  (p) => p.enabled && p.name.toLowerCase() === `${providerName}`.toLowerCase()
+);
+if (!provider) {
+  return NotFound(`No provider '${providerName}' found.`);
+}
+
+const resp = await provider.handle(Astro);
+if (resp.status < 400) {
+  // any non-errors from the auth provider are just returned directly
+  return resp;
+}
+
+// if the below Astro renders, an error has occurred
+---
+
+<ErrorLayout response={resp} />

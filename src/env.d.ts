@@ -11,3 +11,8 @@ interface ImportMetaEnv {
   /** If set to a comma-delimited list of emails, only allow those users to sign up */
   CALENDARI_AUTH_WHITELIST?: string;
 }
+
+interface Response {
+  friendlyTitle?: string;
+  friendlyDescription?: string;
+}

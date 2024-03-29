@@ -1,12 +1,30 @@
 ---
-import { getProviderUrls, AUTH_PROVIDERS as providers } from "@server/auth";
-import Layout from "../layouts/RootLayout.astro";
 import { Icon } from "astro-icon/components";
+import RootLayout from "./RootLayout.astro";
 
-export const prerender = true;
+export interface Props {
+  header?: string;
+  message?: string;
+  returnUrl?: string;
+  returnText?: string;
+  status?: number;
+  response?: Response;
+}
+
+const { returnUrl, returnText, ...props } = Astro.props;
+const status = props.response?.status ?? props.status ?? 0;
+const header =
+  props.header ??
+  props.response?.friendlyTitle ??
+  props.response?.statusText ??
+  "An error occurred";
+const message =
+  props.message ??
+  props.response?.friendlyDescription ??
+  "An error occurred. Please try again.";
 ---
 
-<Layout title="Log in to Calendari.">
+<RootLayout title={`${status ? status + ": " : ""}${header}`}>
   <main>
     <Icon
       name="calendari-gradient"
@@ -16,30 +34,23 @@ export const prerender = true;
       color="black"
       aria-hidden="true"
     />
-    <h1>Log in to <emph>Calendari</emph></h1>
-    <ul role="list" class="provider-list">
+    <h1>{status && <emph>{status}: </emph>}{header}</h1>
+    <div class="message">
+      <p>{message}</p>
       {
-        providers.map((provider) => (
-          <li class="provider">
-            <a href={getProviderUrls(provider.name).begin}>
-              <Icon name={provider.icon} size={32} />
-              Log in using {provider.name}
+        returnUrl && (
+          <div class="return">
+            <a href={returnUrl}>
+              <Icon name="mdi:chevron-left" size={32} />
+              {returnText ?? "Go back"}
             </a>
-          </li>
-        ))
+          </div>
+        )
       }
-    </ul>
-    <p class="instructions">
-      To get started, <emph>log in</emph> using one of the above providers.<br
-      />
-      {
-        import.meta.env["CALENDARI_AUTH_WHITELIST"]
-          ? "If your account is whitelisted, an account will be automatically generated for you."
-          : "If you don't already have an account, one will be automatically generated for you."
-      }
-    </p>
+    </div>
+    <div class="filler"></div>
   </main>
-</Layout>
+</RootLayout>
 
 <style>
   main {
@@ -81,22 +92,12 @@ export const prerender = true;
   h1 emph {
     background-size: 100%;
   }
-  .instructions {
-    margin-top: 4rem;
-    padding: 1.5rem;
-    border-radius: 8px;
-    font-size: 16px;
-    text-align: center;
-  }
-  .provider-list {
-    display: grid;
-    grid-template-columns: auto-fit;
-    gap: 2rem;
-    padding: 0;
-    max-width: fit-content;
+  .message {
     margin: auto auto;
+    text-align: center;
+    font-weight: 500;
   }
-  .provider {
+  .return {
     list-style: none;
     display: flex;
     padding: 1px;
@@ -107,25 +108,36 @@ export const prerender = true;
     background-position: 100%;
     transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: inset 0 0 0 1px oklch(100% 0.014 267.05 / 20%);
+    width: fit-content;
+    margin-inline: auto;
   }
-  .provider:is(:hover, :focus-within) {
+  .return:is(:hover, :focus-within) {
     background-position: 0;
     background-image: var(--accent-gradient);
   }
-  .provider > a {
+  .return > a {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
     text-decoration: none;
     line-height: 1.4;
-    padding: calc(1rem - 1px) calc(2rem - 1px);
+    padding: calc(1rem - 1px) calc(2rem - 1px) calc(1rem - 1px)
+      calc(1.5rem - 1px);
     border-radius: 8px;
     color: white;
     background-color: oklch(27% 0.015 267 / 80%);
   }
-  .provider > a > svg:first-child {
-    margin-right: 2ch;
+  .return > a > svg:first-child {
+    margin-right: 0.5ch;
+  }
+  .filler {
+    flex-shrink: 999;
+    font-size: 4rem;
+    flex-grow: 1;
+    max-height: 8rem;
+    max-height: calc(
+      4rem + 4rem + 0.67em
+    ); /* intended to emulate the height of the <h1> at the top of the page */
   }
 </style>

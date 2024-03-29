@@ -1,19 +1,34 @@
+/** Returns a 400 Bad Request */
+export const BadRequest = (message: string, config: ResponseInit = {}) => {
+  const resp = new Response(message, {
+    statusText: "Bad Request",
+    ...config,
+    status: 400,
+  });
+  resp.friendlyDescription = message;
+  return resp;
+};
+
 /** Returns a 403 Forbidden */
 export const Forbidden = (message: string, config: ResponseInit = {}) => {
-  return new Response(message, {
+  const resp = new Response(message, {
     statusText: "Forbidden",
     ...config,
     status: 403,
   });
+  resp.friendlyDescription = message;
+  return resp;
 };
 
 /** Returns a 404 Not Found */
 export const NotFound = (message: string, config: ResponseInit = {}) => {
-  return new Response(message, {
+  const resp = new Response(message, {
     statusText: "Not Found",
     ...config,
     status: 404,
   });
+  resp.friendlyDescription = message;
+  return resp;
 };
 
 /** Redirects using HTML rather than an HTTP response code, to e.g. support setting cookies */
