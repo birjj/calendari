@@ -2,85 +2,36 @@
 import { getProviderUrls, AUTH_PROVIDERS as providers } from "@server/auth";
 import Layout from "../layouts/RootLayout.astro";
 import { Icon } from "astro-icon/components";
+import PageHeader from "@components/PageHeader.astro";
 
 export const prerender = true;
 ---
 
-<Layout title="Log in to Calendari.">
-  <main>
-    <Icon
-      name="calendari-gradient"
-      class="logo"
-      width={495}
-      height={623}
-      color="black"
-      aria-hidden="true"
-    />
-    <h1>Log in to <emph>Calendari</emph></h1>
-    <ul role="list" class="provider-list">
-      {
-        providers.map((provider) => (
-          <li class="provider">
-            <a href={getProviderUrls(provider.name).begin}>
-              <Icon name={provider.icon} size={32} />
-              Log in using {provider.name}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-    <p class="instructions">
-      To get started, <emph>log in</emph> using one of the above providers.<br
-      />
-      {
-        import.meta.env["CALENDARI_AUTH_WHITELIST"]
-          ? "If your account is whitelisted, an account will be automatically generated for you."
-          : "If you don't already have an account, one will be automatically generated for you."
-      }
-    </p>
-  </main>
+<Layout title="Login.">
+  <PageHeader>Log in to <emph>Calendari</emph></PageHeader>
+  <ul role="list" class="provider-list">
+    {
+      providers.map((provider) => (
+        <li class="provider">
+          <a href={getProviderUrls(provider.name).begin}>
+            <Icon name={provider.icon} size={32} />
+            Log in using {provider.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="instructions">
+    To get started, log in using one of the above providers.<br />
+    {
+      import.meta.env["CALENDARI_AUTH_WHITELIST"]
+        ? "If your account is whitelisted, an account will be automatically generated for you."
+        : "If you don't already have an account, one will be automatically generated for you."
+    }
+  </p>
 </Layout>
 
 <style>
-  main {
-    margin: auto;
-    padding: 1rem;
-    width: 700px;
-    max-width: calc(100% - 2rem);
-    color: white;
-    font-size: 20px;
-    line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  .logo {
-    position: absolute;
-    top: -32px;
-    left: 50%;
-    transform: translatex(-50%);
-    width: 220px;
-    height: auto;
-    z-index: -1;
-  }
-  h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-  emph {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 300%;
-    background-position: 0%;
-  }
-  h1 emph {
-    background-size: 100%;
-  }
   .instructions {
     margin-top: 4rem;
     padding: 1.5rem;

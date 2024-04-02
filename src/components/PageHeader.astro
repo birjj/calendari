@@ -1,0 +1,40 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<Icon
+  name="calendari-gradient"
+  class="logo"
+  width={495}
+  height={623}
+  color="black"
+  aria-hidden="true"
+/>
+<h1><slot /></h1>
+
+<style>
+  .logo {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translatex(-50%);
+    width: 220px;
+    height: auto;
+    z-index: -1;
+  }
+  h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
+  h1 :global(emph) {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100%;
+    background-position: 0%;
+  }
+</style>
