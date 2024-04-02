@@ -17,7 +17,11 @@
       "openFiles": ["README.md"]
     },
     "vscode": {
-      "extensions": ["astro-build.astro-vscode", "esbenp.prettier-vscode"]
+      "extensions": [
+        "astro-build.astro-vscode",
+        "esbenp.prettier-vscode",
+        "Vue.volar"
+      ]
     }
   }
 }

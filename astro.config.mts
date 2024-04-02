@@ -2,11 +2,11 @@ import { defineConfig } from "astro/config";
 import icon from "astro-icon";
 import netlify from "@astrojs/netlify";
 
-import react from "@astrojs/react";
+import vue from "@astrojs/vue";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon(), react()],
+  integrations: [icon(), vue()],
   output: "server",
   adapter: netlify()
 });

@@ -22,7 +22,7 @@
         "src/pages/*"
       ]
     },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
   }
 }
