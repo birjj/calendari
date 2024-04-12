@@ -1,6 +1,6 @@
 ---
 import { getProviderUrls, AUTH_PROVIDERS as providers } from "@server/auth";
-import Layout from "../layouts/RootLayout.astro";
+import RootLayout from "../layouts/RootLayout.astro";
 import { Icon } from "astro-icon/components";
 import PageHeader from "@components/PageHeader.astro";
 import LoginDropdown from "@components/LoginDropdown.vue";
@@ -15,7 +15,7 @@ const simplifiedProviders = providers.map((provider) => {
 });
 ---
 
-<Layout title="">
+<RootLayout title="">
   <PageHeader>Welcome to <emph>Calendari</emph></PageHeader>
   <p>
     <emph>Calendari</emph> is an API for synchronizing calendars from various sources
@@ -51,7 +51,7 @@ const simplifiedProviders = providers.map((provider) => {
       ))
     }
   </ul>
-</Layout>
+</RootLayout>
 
 <style>
   emph {
@@ -60,12 +60,13 @@ const simplifiedProviders = providers.map((provider) => {
     -webkit-text-fill-color: transparent;
     background-size: 300%;
     background-position: 0%;
-    font-weight: bold;
+    font-weight: 800;
   }
   p {
-    font-size: 18px;
+    font-size: 1.05rem;
     margin-top: 0;
     margin-bottom: 1rem;
+    text-wrap: pretty;
   }
   .instructions {
     margin-top: 4rem;

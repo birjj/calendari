@@ -1,4 +1,6 @@
 ---
+import "@fontsource-variable/inter";
+
 interface Props {
   title: string;
 }
@@ -41,7 +43,7 @@ const pageTitle = title
     );
   }
   html {
-    font-family: system-ui, sans-serif;
+    font-family: "Inter Variable", system-ui, sans-serif;
     background: #13151a;
     background-size: 224px;
   }
@@ -62,15 +64,35 @@ const pageTitle = title
 
   main {
     margin: auto;
-    padding: 1rem;
-    width: 700px;
-    max-width: calc(100% - 2rem);
+    padding: 1rem 0;
+    width: 47rem;
+    --article-inset: 4rem;
+    max-width: calc(100% - 1rem);
     color: white;
-    font-size: 20px;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     box-sizing: border-box;
+  }
+  @media (max-width: 580px) {
+    main {
+      --article-inset: 2rem;
+    }
+  }
+  @media (max-width: 450px) {
+    main {
+      --article-inset: 1rem;
+    }
+  }
+  @media (max-width: 256px) {
+    main {
+      --article-inset: 8px;
+    }
+  }
+
+  :where(main > *:not(svg, img)) {
+    margin-left: var(--article-inset);
+    margin-right: var(--article-inset);
   }
 </style>

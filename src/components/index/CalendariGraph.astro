@@ -145,8 +145,6 @@ const svgHeight = elements.reduce(
             <text
               x={elm.x + elm.width / 2}
               y={1}
-              font-size="16"
-              font-family="system-ui, sans-serif"
               text-anchor="middle"
               dominant-baseline="middle"
               class={`${elm.className}--text`}
@@ -204,6 +202,9 @@ const svgHeight = elements.reduce(
     margin-top: 2rem;
     margin-bottom: 3rem;
   }
+  :where(svg, svg *) {
+    font-family: inherit;
+  }
   text {
     fill: #fff;
   }
@@ -218,6 +219,9 @@ const svgHeight = elements.reduce(
   }
   .external--inner {
     fill: #2b2d31;
+  }
+  .external--text {
+    font-size: 14px;
   }
   .line--text {
     font-family: ui-monospace, 
@@ -247,6 +251,7 @@ const svgHeight = elements.reduce(
   .internal--text {
     fill: url(#accent-gradient-text);
     font-weight: bold;
+    font-size: 16px;
   }
 
   /* we use CSS to style the in-SVG accent gradient stops, so we can use CSS variables */
