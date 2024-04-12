@@ -1,6 +1,6 @@
 import { jwtVerify } from "jose";
 import type { Provider } from "./auth.d.ts";
-import { getProviderUrls } from "./index.ts";
+import { getProviderUrls, setLoggedInUser } from "./index.ts";
 import randomString from "@utils/random-string.ts";
 import { getSignedJWT } from "@server/jwt.ts";
 import { BadRequest, Forbidden, HTMLRedirect } from "@server/responses.ts";
@@ -139,7 +139,8 @@ const GitHubProvider: Provider = {
       secure: true,
       httpOnly: true,
       maxAge: 3600000, // 1h
-      sameSite: "none",
+      path: "/",
+      sameSite: "lax",
     });
     return context.redirect(initiateUri.toString());
   },
@@ -159,9 +160,12 @@ const GitHubProvider: Provider = {
       return BadRequest(e instanceof Error ? e.message : `${e}`);
     }
     const email = emails?.find((e) => e.primary)?.email;
-    return new Response(`Using email ${JSON.stringify(email)}`, {
-      status: 200,
-    });
+    if (!email) {
+      return BadRequest("Couldn't get primary e-mail from the given user");
+    }
+    console.log("[auth.github] User", email, "logged in");
+    await setLoggedInUser(context, email);
+    return context.redirect("/app");
   },
 };
 export default GitHubProvider;

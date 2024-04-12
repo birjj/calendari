@@ -1,0 +1,33 @@
+---
+import RootLayout from "../layouts/RootLayout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import ErrorLayout from "@layouts/ErrorLayout.astro";
+
+import { getLoggedInUser } from "@server/auth";
+import { Forbidden } from "@server/responses";
+let loggedIn: { username: string } | { errorResponse: Response };
+try {
+  loggedIn = { username: await getLoggedInUser(Astro) };
+} catch (e) {
+  loggedIn = {
+    errorResponse: Forbidden(e instanceof Error ? e.message : `${e}`),
+  };
+}
+---
+
+{
+  "errorResponse" in loggedIn ? (
+    <ErrorLayout
+      response={loggedIn.errorResponse}
+      returnText="Return to landing page"
+      returnUrl="/"
+    />
+  ) : (
+    <RootLayout title="App">
+      <PageHeader>
+        <emph>Calendari</emph>
+        <Fragment slot="subheading">{loggedIn.username}</Fragment>
+      </PageHeader>
+    </RootLayout>
+  )
+}

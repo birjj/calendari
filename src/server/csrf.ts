@@ -6,7 +6,7 @@ import randomString from "@utils/random-string";
 export const getCsrf = async (cookies: AstroCookies) => {
   if (cookies.has("calendari:csrf")) {
     try {
-      const payload = await getDataFromJWT(
+      const payload = await getDataFromJWT<{ csrf: string }>(
         cookies.get("calendari:csrf")!.value
       );
       return (payload.csrf as string) ?? null;
@@ -27,6 +27,7 @@ export const setCsrf = async (cookies: AstroCookies) => {
     secure: true,
     httpOnly: false,
     maxAge: 3600000, // 1h
+    path: "/",
   });
   return csrf;
 };

@@ -10,7 +10,16 @@ import { Icon } from "astro-icon/components";
   color="black"
   aria-hidden="true"
 />
-<h1><slot /></h1>
+<h1>
+  <slot />
+  {
+    Astro.slots.has("subheading") ? (
+      <p class="subheading">
+        <slot name="subheading" />
+      </p>
+    ) : null
+  }
+</h1>
 
 <style>
   .logo {
@@ -36,5 +45,10 @@ import { Icon } from "astro-icon/components";
     -webkit-text-fill-color: transparent;
     background-size: 100%;
     background-position: 0%;
+    font-weight: 800;
+  }
+  .subheading {
+    font-size: 1rem;
+    font-weight: normal;
   }
 </style>

@@ -21,7 +21,7 @@ export const getSignedJWT = async (
 };
 
 /** Verifies and parses the given signed JWT token. Will throw an error if the JWT fails to verify */
-export const getDataFromJWT = async (jwt: string) => {
+export const getDataFromJWT = async <D = unknown>(jwt: string) => {
   const { payload } = await jwtVerify(jwt, JWT_SIGNING_KEY!);
-  return payload;
+  return payload as D;
 };

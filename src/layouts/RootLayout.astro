@@ -7,7 +7,7 @@ interface Props {
 
 const { title } = Astro.props;
 const pageTitle = title
-  ? `Calendari.\u2001${/[\.?!]$/.test(title) ? title : title + "."}`
+  ? `Calendari.\u2000${/[\.?!]$/.test(title) ? title : title + "."}`
   : "Calendari.";
 ---
 
