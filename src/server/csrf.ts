@@ -26,7 +26,7 @@ export const setCsrf = async (cookies: AstroCookies) => {
     sameSite: "strict",
     secure: true,
     httpOnly: false,
-    maxAge: 3600000, // 1h
+    maxAge: 60 * 60, // 1h
     path: "/",
   });
   return csrf;

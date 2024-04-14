@@ -138,7 +138,7 @@ const GitHubProvider: Provider = {
     context.cookies.set(STATE_COOKIE_NAME, jwt, {
       secure: true,
       httpOnly: true,
-      maxAge: 3600000, // 1h
+      maxAge: 60 * 60, // 1h
       path: "/",
       sameSite: "lax",
     });

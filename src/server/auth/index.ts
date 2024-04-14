@@ -52,7 +52,7 @@ export const setLoggedInUser = async (
   context.cookies.set(USER_COOKIE_NAME, jwt, {
     secure: true,
     httpOnly: true,
-    maxAge: 14 * 24 * 1000 * 60 * 60, // 14d
+    maxAge: 14 * 24 * 60 * 60, // 14d
     path: "/",
     sameSite: "lax",
   });
