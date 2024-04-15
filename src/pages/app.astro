@@ -3,6 +3,8 @@ import RootLayout from "../layouts/RootLayout.astro";
 import PageHeader from "@components/PageHeader.astro";
 import ErrorLayout from "@layouts/ErrorLayout.astro";
 
+import CalendarList from "@components/app/CalendarList.vue";
+
 import { getLoggedInUser } from "@server/auth";
 import { Forbidden } from "@server/responses";
 let loggedIn: { username: string } | { errorResponse: Response };
@@ -28,6 +30,10 @@ try {
         <emph>Calendari</emph>
         <Fragment slot="subheading">{loggedIn.username}</Fragment>
       </PageHeader>
+      <h2>
+        <emph>Calendars</emph>
+      </h2>
+      <CalendarList client:load />
     </RootLayout>
   )
 }

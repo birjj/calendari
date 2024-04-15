@@ -1,15 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
+
 ---
 
-<Icon
-  name="calendari-gradient"
-  class="logo"
-  width={495}
-  height={623}
-  color="black"
-  aria-hidden="true"
-/>
 <h1>
   <slot />
   {
@@ -22,15 +14,6 @@ import { Icon } from "astro-icon/components";
 </h1>
 
 <style>
-  .logo {
-    position: absolute;
-    top: -32px;
-    left: 50%;
-    transform: translatex(-50%);
-    width: 220px;
-    height: auto;
-    z-index: -1;
-  }
   h1 {
     font-size: 3rem;
     font-weight: 600;

@@ -91,8 +91,28 @@ const pageTitle = title
     }
   }
 
-  :where(main > *:not(svg, img)) {
+  :where(main > *:not(svg, img)),
+  :where(main > astro-island > *:not(svg, img)) {
     margin-left: var(--article-inset);
     margin-right: var(--article-inset);
+  }
+
+  emph {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 300%;
+    background-position: 0%;
+    font-weight: 800;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  p {
+    font-size: 1.05rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
   }
 </style>

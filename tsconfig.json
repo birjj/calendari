@@ -3,26 +3,14 @@
   "compilerOptions": {
     "baseUrl": "/workspaces/calendari",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@server/*": [
-        "src/server/*"
-      ],
-      "@icons/*": [
-        "src/icons/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ]
+      "@components/*": ["src/components/*"],
+      "@server/*": ["src/server/*"],
+      "@utils/*": ["src/utils/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@pages/*": ["src/pages/*"]
     },
+    "types": ["unplugin-icons/types/vue"],
     "jsx": "preserve",
-    "jsxImportSource": "vue",
+    "jsxImportSource": "vue"
   }
 }

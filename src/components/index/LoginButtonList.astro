@@ -1,6 +1,9 @@
 ---
 import { getProviderUrls, AUTH_PROVIDERS as providers } from "@server/auth";
-import { Icon } from "astro-icon/components";
+import GitHubIcon from "~icons/mdi/github";
+const icons = {
+  "mdi:github": GitHubIcon,
+};
 ---
 
 <ul role="list" class="provider-list">
@@ -8,7 +11,9 @@ import { Icon } from "astro-icon/components";
     providers.map((provider) => (
       <li class="provider">
         <a href={getProviderUrls(provider.name).begin}>
-          <Icon name={provider.icon} size={32} />
+          {provider.icon === "mdi:github" ? (
+            <GitHubIcon width={32} height={32} />
+          ) : null}
           Log in using {provider.name}
         </a>
       </li>
