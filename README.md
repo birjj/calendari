@@ -2,7 +2,7 @@
 
 Calendari is a tool to manage and merge calendars across platforms. It consists of a set of API routes to create, update and delete calendar events in a given calendar, and an endpoint that exposes the complete set of events in the iCal format.
 
-![](./docs/chart.svg)
+![Graph showing input and output of Calendari](./docs/chart.svg)
 
 It is designed to use serverless functions rather than a dedicated server, to make it easy to host as a hobby project.
 
