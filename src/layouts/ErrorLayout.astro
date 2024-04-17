@@ -1,4 +1,5 @@
 ---
+import AnchorButton from "@components/AnchorButton.vue";
 import RootLayout from "./RootLayout.astro";
 import PageHeader from "@components/PageHeader.astro";
 import ChevronLeft from "~icons/mdi/chevron-left";
@@ -31,12 +32,10 @@ const message =
     <p>{message}</p>
     {
       returnUrl && (
-        <div class="return">
-          <a href={returnUrl}>
-            <ChevronLeft width={32} height={32} />
-            {returnText ?? "Go back"}
-          </a>
-        </div>
+        <AnchorButton href={returnUrl}>
+          <ChevronLeft width={32} height={32} />
+          {returnText ?? "Go back"}
+        </AnchorButton>
       )
     }
   </div>
@@ -48,40 +47,6 @@ const message =
     margin: auto auto;
     text-align: center;
     font-weight: 500;
-  }
-  .return {
-    list-style: none;
-    display: flex;
-    padding: 1px;
-    background-color: #23262d;
-    background-image: none;
-    background-size: 400%;
-    border-radius: 7px;
-    background-position: 100%;
-    transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: inset 0 0 0 1px oklch(100% 0.014 267.05 / 20%);
-    width: fit-content;
-    margin-inline: auto;
-  }
-  .return:is(:hover, :focus-within) {
-    background-position: 0;
-    background-image: var(--accent-gradient);
-  }
-  .return > a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    line-height: 1.4;
-    padding: calc(1rem - 1px) calc(2rem - 1px) calc(1rem - 1px)
-      calc(1.5rem - 1px);
-    border-radius: 8px;
-    color: white;
-    background-color: oklch(27% 0.015 267 / 80%);
-  }
-  .return > a > svg:first-child {
-    margin-right: 0.5ch;
   }
   .filler {
     flex-shrink: 999;

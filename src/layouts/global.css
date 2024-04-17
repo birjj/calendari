@@ -1,0 +1,46 @@
+:root {
+  --accent: 72% 0.25 3; /* #ff6999 */
+  --accent-alt: 92% 0.17 98; /* #ffe565 */
+  --accent-light: 82% 0.15 50; /* #ffae81 */
+  --accent-dark: 20% 0.1 350; /* #2f001b */
+  --accent-gradient: linear-gradient(
+    20deg,
+    oklch(var(--accent)) 0%,
+    oklch(var(--accent-alt)) 100%
+  );
+
+  --background: 19.58% 0.011 268.14; /* #13151a */
+
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-mono: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
+}
+html {
+  font-family: var(--font-sans);
+  background: oklch(var(--background));
+}
+body {
+  margin: 0;
+}
+code {
+  font-family: var(--font-mono);
+}
+
+emph {
+  background-image: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300%;
+  background-position: 0%;
+  font-weight: 800;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+p {
+  font-size: 1.05rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}

@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/inter";
+import "./global.css";
 
 interface Props {
   title: string;
@@ -30,38 +31,8 @@ const pageTitle = title
     </main>
   </body>
 </html>
-<style is:global>
-  :root {
-    --accent: 72% 0.25 3;
-    --accent-alt: 92% 0.17 98;
-    --accent-light: 82% 0.15 50;
-    --accent-dark: 20% 0.1 350;
-    --accent-gradient: linear-gradient(
-      20deg,
-      oklch(var(--accent)) 0%,
-      oklch(var(--accent-alt)) 100%
-    );
-  }
-  html {
-    font-family: "Inter Variable", system-ui, sans-serif;
-    background: #13151a;
-    background-size: 224px;
-  }
-  body {
-    margin: 0;
-  }
-  code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
-  }
 
+<style>
   main {
     margin: auto;
     padding: 1rem 0 10vh;
@@ -95,24 +66,5 @@ const pageTitle = title
   :where(main > astro-island > *:not(svg, img)) {
     margin-left: var(--article-inset);
     margin-right: var(--article-inset);
-  }
-
-  emph {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 300%;
-    background-position: 0%;
-    font-weight: 800;
-  }
-
-  h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-  p {
-    font-size: 1.05rem;
-    margin-top: 0;
-    margin-bottom: 1rem;
   }
 </style>
