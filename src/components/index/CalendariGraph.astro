@@ -67,7 +67,7 @@ const svgHeight = elements.reduce(
 ---
 
 <!-- The viewbox has x=0 at the left, and y=0 at the center -->
-<svg viewBox={`0 ${-svgHeight / 2} ${svgWidth} ${svgHeight}`} class="graph">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 ${-svgHeight / 2} ${svgWidth} ${svgHeight}`} class="graph">
   <defs>
     <linearGradient id="graph-mask-fade">
       <stop offset="0" stop-color="black"></stop>
