@@ -62,8 +62,8 @@ const pageTitle = title
     }
   }
 
-  :where(main > *:not(svg, img)),
-  :where(main > astro-island > *:not(svg, img)) {
+  :global(:where(main > *:not(svg, img))),
+  :global(:where(main > astro-island > *:not(svg, img))) {
     margin-left: var(--article-inset);
     margin-right: var(--article-inset);
   }
